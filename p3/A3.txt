@@ -1,0 +1,44 @@
+import pandas as pd
+import numpy as np
+
+# Load dataset
+df = pd.read_csv("iris.csv")
+
+# Display first rows
+print(df.head())
+
+# Dataset info
+print(df.info())
+
+# Group by species
+grouped_data = df.groupby('species')
+
+# Summary statistics
+print(grouped_data['sepal_length'].agg(
+    ['mean', 'median', 'min', 'max', 'std']
+))
+
+# Create lists for each species
+setosa = df[df['species'] == 'setosa']['sepal_length']
+versicolor = df[df['species'] == 'versicolor']['sepal_length']
+virginica = df[df['species'] == 'virginica']['sepal_length']
+
+print("Setosa:", list(setosa.head()))
+print("Versicolor:", list(versicolor.head()))
+print("Virginica:", list(virginica.head()))
+
+# Statistical details
+for species in df['species'].unique():
+
+    data = df[df['species'] == species]
+
+    print("\nSpecies:", species)
+
+    print("Mean:")
+    print(data.mean(numeric_only=True))
+
+    print("\nStandard Deviation:")
+    print(data.std(numeric_only=True))
+
+    print("\nPercentile:")
+    print(data.quantile([0.25, 0.5, 0.75], numeric_only=True))

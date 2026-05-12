@@ -1,0 +1,95 @@
+import nltk
+import pandas as pd
+
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
+from nltk.stem import WordNetLemmatizer
+from nltk import pos_tag
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# Download Required NLTK Resources
+nltk.download('punkt')
+nltk.download('punkt_tab')
+
+nltk.download('stopwords')
+
+nltk.download('averaged_perceptron_tagger')
+nltk.download('averaged_perceptron_tagger_eng')
+
+nltk.download('wordnet')
+
+# Sample Text
+text = """
+Data Science is an interdisciplinary field that uses scientific methods,
+processes, algorithms and systems to extract knowledge and insights from data.
+Machine Learning is a part of Data Science.
+"""
+
+# Tokenization
+tokens = word_tokenize(text)
+
+print("Tokens:\n")
+print(tokens)
+
+# POS Tagging
+pos = pos_tag(tokens)
+
+print("\nPOS Tagging:\n")
+print(pos)
+
+# Stop Words Removal
+stop_words = set(stopwords.words('english'))
+
+filtered_words = []
+
+for word in tokens:
+    if word.lower() not in stop_words:
+        filtered_words.append(word)
+
+print("\nAfter Stop Words Removal:\n")
+print(filtered_words)
+
+# Stemming
+ps = PorterStemmer()
+
+stemmed_words = []
+
+for word in filtered_words:
+    stemmed_words.append(ps.stem(word))
+
+print("\nStemmed Words:\n")
+print(stemmed_words)
+
+# Lemmatization
+lemmatizer = WordNetLemmatizer()
+
+lemmatized_words = []
+
+for word in filtered_words:
+    lemmatized_words.append(lemmatizer.lemmatize(word))
+
+print("\nLemmatized Words:\n")
+print(lemmatized_words)
+
+# TF-IDF
+documents = [
+    "Data Science uses Machine Learning",
+    "Machine Learning is useful in Data Science",
+    "Python is used for Data Analysis"
+]
+
+vectorizer = TfidfVectorizer()
+
+tfidf_matrix = vectorizer.fit_transform(documents)
+
+feature_names = vectorizer.get_feature_names_out()
+
+df_tfidf = pd.DataFrame(
+    tfidf_matrix.toarray(),
+    columns=feature_names
+)
+
+print("\nTF-IDF Matrix:\n")
+print(df_tfidf)

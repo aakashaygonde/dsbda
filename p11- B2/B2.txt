@@ -1,0 +1,70 @@
+Create Log.txt : 
+
+
+INFO User logged in
+ERROR Disk failure
+WARNING Memory low
+INFO File uploaded
+ERROR Network timeout
+WARNING CPU temperature high
+INFO User logout
+ERROR Database connection failed
+
+---------------------
+
+in file Mapper.py : 
+
+import sys
+
+for line in sys.stdin:
+
+    line = line.strip()
+
+    words = line.split()
+
+    if len(words) > 0:
+
+        log_type = words[0]
+
+        print(f"{log_type}\t1")
+
+------------
+
+in File reducer.py : 
+
+import sys
+
+current_type = None
+current_count = 0
+
+for line in sys.stdin:
+
+    line = line.strip()
+
+    log_type, count = line.split('\t')
+
+    count = int(count)
+
+    if current_type == log_type:
+
+        current_count += count
+
+    else:
+
+        if current_type:
+
+            print(f"{current_type}\t{current_count}")
+
+        current_type = log_type
+
+        current_count = count
+
+if current_type == log_type:
+
+    print(f"{current_type}\t{current_count}")
+
+
+-------------
+
+type in terminal : 
+type log.txt | python mapper.py | sort | python reducer.py

@@ -1,0 +1,69 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Create Dataset
+data = {
+    'Student_ID': [1,2,3,4,5,6,7,8,9,10],
+    'Name': ['Amit','Riya','Karan','Sneha','Rahul',
+             'Pooja','Vikas','Neha','Arjun','Meera'],
+    
+    'Maths_Marks': [78, 85, np.nan, 92, 35, 88, 400, 76, 81, 95],
+    
+    'Attendance': [85, 90, 78, np.nan, 60, 95, 88, 84, 79, 91],
+    
+    'Study_Hours': [2, 3, 1, 5, 0.5, 4, 15, 2.5, 3, 4.5],
+    
+    'CGPA': [7.5, 8.2, 6.8, 9.1, 5.2, np.nan, 9.8, 7.2, 8.0, 9.3]
+}
+
+df = pd.DataFrame(data)
+
+# Missing Values
+print(df.isnull().sum())
+
+# Fill Missing Values
+df['Maths_Marks'].fillna(df['Maths_Marks'].mean(), inplace=True)
+df['Attendance'].fillna(df['Attendance'].mean(), inplace=True)
+df['CGPA'].fillna(df['CGPA'].mean(), inplace=True)
+
+# Dataset Info
+print(df.info())
+
+# Boxplot
+plt.figure(figsize=(8,5))
+sns.boxplot(data=df[['Maths_Marks', 'Study_Hours']])
+plt.show()
+
+# IQR Method
+Q1 = df['Maths_Marks'].quantile(0.25)
+Q3 = df['Maths_Marks'].quantile(0.75)
+
+IQR = Q3 - Q1
+
+lower_limit = Q1 - 1.5 * IQR
+upper_limit = Q3 + 1.5 * IQR
+
+# Remove Outliers
+df = df[(df['Maths_Marks'] >= lower_limit) &
+        (df['Maths_Marks'] <= upper_limit)]
+
+# Log Transformation
+df['Log_Study_Hours'] = np.log(df['Study_Hours'] + 1)
+
+# Histograms
+plt.figure(figsize=(10,4))
+
+plt.subplot(1,2,1)
+sns.histplot(df['Study_Hours'], kde=True)
+plt.title("Before Transformation")
+
+plt.subplot(1,2,2)
+sns.histplot(df['Log_Study_Hours'], kde=True)
+plt.title("After Transformation")
+
+plt.show()
+
+# Final Dataset
+print(df.head())

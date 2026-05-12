@@ -1,0 +1,82 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, accuracy_score
+
+# Load dataset
+df = pd.read_csv("iris.csv")
+
+# Features and target
+X = df.iloc[:, 0:4]
+
+y = df['species']
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.25,
+    random_state=0
+)
+
+# Create model
+model = GaussianNB()
+
+# Train model
+model.fit(X_train, y_train)
+
+# Predictions
+y_pred = model.predict(X_test)
+
+# Confusion Matrix
+cm = confusion_matrix(y_test, y_pred)
+
+print(cm)
+
+# Calculate TP, FP, FN, TN
+TP = cm[0][0]
+
+FP = cm[:,0].sum() - TP
+
+FN = cm[0,:].sum() - TP
+
+TN = cm.sum() - (TP + FP + FN)
+
+print("True Positive:", TP)
+print("False Positive:", FP)
+print("False Negative:", FN)
+print("True Negative:", TN)
+
+# Accuracy
+accuracy = accuracy_score(y_test, y_pred)
+
+print("Accuracy:", accuracy)
+
+# Error Rate
+error_rate = 1 - accuracy
+
+print("Error Rate:", error_rate)
+
+# Precision
+precision = TP / (TP + FP)
+
+print("Precision:", precision)
+
+# Recall
+recall = TP / (TP + FN)
+
+print("Recall:", recall)
+
+# Confusion Matrix Visualization
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+
+plt.title("Confusion Matrix")
+
+plt.xlabel("Predicted")
+
+plt.ylabel("Actual")
+
+plt.show()

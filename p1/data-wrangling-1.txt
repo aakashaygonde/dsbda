@@ -1,0 +1,53 @@
+download the dataset as well in the same folder.
+
+Python code : 
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load dataset
+df = pd.read_csv("data.csv")
+
+# Display first rows
+print(df.head())
+
+# Dataset dimensions
+print(df.shape)
+
+# Column names
+print(df.columns)
+
+# Data types
+print(df.dtypes)
+
+# Statistical summary
+print(df.describe())
+
+# Missing values
+print(df.isnull().sum())
+
+# Fill missing values
+df['Age'].fillna(df['Age'].mean(), inplace=True)
+
+# Verify missing values
+print(df.isnull().sum())
+
+# Dataset information
+print(df.info())
+
+# Convert datatype
+df['Survived'] = df['Survived'].astype('int')
+
+# Normalize Fare column
+df['Fare'] = (df['Fare'] - df['Fare'].min()) / (df['Fare'].max() - df['Fare'].min())
+
+# Convert categorical variable
+df['Sex'] = df['Sex'].map({'male': 0, 'female': 1})
+
+# Display final data
+print(df.head())
+
+# Save processed data
+df.to_csv("processed_data.csv", index=False)
